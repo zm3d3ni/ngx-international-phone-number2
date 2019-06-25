@@ -19,10 +19,12 @@
   </span>
 
   <!-- if required -->
-  <input onlyNumber="true" class="form-control" [attr.maxlength]="maxlength" [(ngModel)]="phoneNumber" (ngModelChange)="updatePhoneNumber($event)" 
-  [placeholder]="placeholder" [type]="type" *ngIf="required" required #phoneNumberInput>
-  
+  <label id='dial-code'>+{{dialCode}}</label>
+
+  <input *ngIf="required" phone required name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}' pattern="{{pattern}}" 
+  [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) />
+
   <!-- if not required -->
-  <input onlyNumber="true" class="form-control" [attr.maxlength]="maxlength" [(ngModel)]="phoneNumber" (ngModelChange)="updatePhoneNumber($event)" 
-  [placeholder]="placeholder" [type]="type" *ngIf="!required" #phoneNumberInput>
+  <input *ngIf="!required" phone name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}' pattern="{{pattern}}" 
+  [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) />
 </div>

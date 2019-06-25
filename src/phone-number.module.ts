@@ -2,9 +2,9 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PhoneNumberComponent } from './phone-number.component';
-import { OnlyNumberDirective } from './only-number.directive';
 import { CountryPipe } from './country.pipe';
 import { CountryService } from './country.service';
+import { PhoneMaskCursorProcessorDirective } from 'phone-directive';
 
 @NgModule({
     imports: [
@@ -14,7 +14,7 @@ import { CountryService } from './country.service';
     ],
     declarations: [
         PhoneNumberComponent,
-        OnlyNumberDirective,
+        PhoneMaskCursorProcessorDirective,
         CountryPipe
     ],
     exports: [

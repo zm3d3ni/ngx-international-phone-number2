@@ -57,6 +57,20 @@ export class PhoneNumberComponent
 
     @Input() allowedCountries: Country[];
 
+    // customizable text masking, defaults as "111-111-1111"
+    // TODO - I am unable to pass this Input in as an array
+    // @Input() masking = [/[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+    masking = [/[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+
+    // regex pattern to apply to input, defaults as 3 digits followed by 3 digits, followed by 4 digits
+    @Input() pattern = "^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$";
+    
+    // optionally format output model with a space between country code and phone number
+    @Input() countryCodeSpace: boolean = true;
+    
+    // optionally suppress the +1 for US phones
+    @Input() noUSCountryCode: boolean = true;
+
     @Output() onCountryCodeChanged: EventEmitter<any> = new EventEmitter();
 
     // ELEMENT REF
@@ -71,8 +85,12 @@ export class PhoneNumberComponent
     countryFilter: string;
     showDropdown = false;
     phoneNumber = '';
+    phoneNumberOnly = ''; //separating the phone from the country dial code
 
     value = '';
+
+    // the country's dial code displayed as read-only
+    dialCode;
 
     @ViewChild('phoneNumberInput') phoneNumberInput: ElementRef;
 
@@ -150,10 +168,10 @@ export class PhoneNumberComponent
      * @param event
      */
     updatePhoneNumber(event: Event) {
-        if (PhoneNumberComponent.startsWithPlus(this.phoneNumber)) {
-            this.findPrefix(this.phoneNumber.split(PLUS)[1]);
+        if (PhoneNumberComponent.startsWithPlus((''+event))) {
+            this.findPrefix((''+event).split(PLUS)[1]);
         } else {
-            this.selectedCountry = null;
+            // this.selectedCountry = null; // why were they setting this to null?
         }
 
         this.updateValue();
@@ -182,6 +200,7 @@ export class PhoneNumberComponent
         } else {
             this.selectedCountry = null;
         }
+        this.dialCode = this.selectedCountry.dialCode;
     }
 
     /**
@@ -227,6 +246,12 @@ export class PhoneNumberComponent
         if (this.defaultCountry) {
             this.updatePhoneInput(this.defaultCountry);
         }
+        this.getPhoneOnly();
+    }
+
+    // strips country dial code from phone for display
+    getPhoneOnly(){
+        this.phoneNumberOnly = this.phoneNumber.substring(this.phoneNumber.length-10, this.phoneNumber.length);
     }
 
     /**
@@ -266,40 +291,36 @@ export class PhoneNumberComponent
 
     /**
      * Updates the value and trigger changes
+     * Updates model to '+' + dialCode + phone. US phones are not prefixed.
      */
     private updateValue() {
-        this.value = this.phoneNumber.replace(/ /g, '');
-        this.onModelChange(this.value);
+        let temp;
+        
+        if(this.selectedCountry.countryCode != 'us' || this.noUSCountryCode)
+            if(this.countryCodeSpace)
+                temp = '+'+this.dialCode+' '+this.phoneNumberOnly;
+            else
+                temp = '+'+this.dialCode+this.phoneNumberOnly;
+        else {   
+            temp = this.phoneNumberOnly;    
+        }
+        temp = temp.replace(/-/g, '');
+        this.onModelChange(temp);
         this.onTouch();
     }
 
     /**
-     * Updates the input
+     * Updates the country dial code
      * @param countryCode
      */
     private updatePhoneInput(countryCode: string) {
         this.showDropdown = false;
 
-        let newInputValue: string = PhoneNumberComponent.startsWithPlus(
-            this.phoneNumber
-        )
-            ? `${this.phoneNumber
-                .split(PLUS)[1]
-                .substr(
-                    this.selectedCountry.dialCode.length,
-                    this.phoneNumber.length
-                )}`
-            : this.phoneNumber;
-
         this.selectedCountry = this.countries.find(
             (country: Country) => country.countryCode === countryCode
         );
         if (this.selectedCountry) {
-            this.phoneNumber = `${PLUS}${
-                this.selectedCountry.dialCode
-                } ${newInputValue.replace(/ /g, '')}`;
-        } else {
-            this.phoneNumber = `${newInputValue.replace(/ /g, '')}`;
+            this.dialCode = this.selectedCountry.dialCode;
         }
     }
 
