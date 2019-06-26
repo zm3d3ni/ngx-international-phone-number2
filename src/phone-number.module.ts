@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PhoneNumberComponent } from './phone-number.component';
 import { CountryPipe } from './country.pipe';
 import { CountryService } from './country.service';
-import { PhoneMaskCursorProcessorDirective } from './phone-directive';
+import { PhoneMaskCursorProcessorDirective } from './phone.directive';
 
 @NgModule({
     imports: [
