@@ -36,7 +36,7 @@ const VALIDATOR = {
 };
 
 @Component({
-    selector: 'international-phone-number',
+    selector: 'international-phone-number2',
     templateUrl: './phone-number.component.html',
     styleUrls: ['./phone-number.component.scss', './assets/css/flags.min.css'],
     host: {
