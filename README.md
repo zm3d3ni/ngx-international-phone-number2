@@ -1,4 +1,4 @@
-# ngx-international-phone-number
+# ngx-international-phone-number2
 A simple international telephone number input. Allows you to create a phone number field with country dropdown. 
 
 This is re-re-written version (with enhancements and bug fixes) of [ngx-international-phone-number](https://github.com/nikhiln/ngx-international-phone-number) by [nikhiln](https://github.com/nikhiln), which was a re-written version of [ng4-intl-phone](https://github.com/kondi0/ng4-intl-phone/). So credit should go to [nikhiln](https://github.com/nikhiln) and [kondi0](https://github.com/kondi0).
