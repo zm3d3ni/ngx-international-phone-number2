@@ -251,7 +251,8 @@ export class PhoneNumberComponent
 
     // strips country dial code from phone for display
     getPhoneOnly(){
-        this.phoneNumberOnly = this.phoneNumber.substring(this.phoneNumber.length-10, this.phoneNumber.length);
+        this.phoneNumberOnly = this.phoneNumber.replace(/\D/g, "");
+        this.phoneNumberOnly = this.phoneNumberOnly.substring(this.phoneNumberOnly.length-10, this.phoneNumberOnly.length);
     }
 
     /**
