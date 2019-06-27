@@ -19,7 +19,7 @@
   </span>
 
   <!-- if required -->
-  <label id='dial-code'>+{{dialCode}}</label>
+  <label id='dial-code' *ngIf=dialCode>+{{dialCode}}</label>
 
   <input *ngIf="required" phone required name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}' pattern="{{pattern}}" 
   [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) />
