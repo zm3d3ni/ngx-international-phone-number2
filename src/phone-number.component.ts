@@ -243,7 +243,7 @@ export class PhoneNumberComponent
             }
         }
 
-        if (this.defaultCountry) {
+        if (!this.phoneNumber && this.defaultCountry) {
             this.updatePhoneInput(this.defaultCountry);
         }
         this.getPhoneOnly();
