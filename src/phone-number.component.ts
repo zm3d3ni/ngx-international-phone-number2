@@ -132,6 +132,23 @@ export class PhoneNumberComponent
             this.countries = this.countryService.getCountries();
         }
         this.orderCountriesByName();
+        if(this.defaultCountry)
+            this.setDefault();
+    }
+
+    /**
+     * Moves default country to top of the list to avoid having to scroll
+     */
+    setDefault(){
+        let temp;
+        this.countries.forEach((country) =>{
+            if(country.countryCode == this.defaultCountry){
+                temp = country;
+            }
+        });
+        // a puzzling yet pleasant side-effect of this change is Canadian numbers with +1 now showing as Canadian and not US
+        this.countries = this.countries.filter(item => item !== temp);
+        this.countries.unshift(temp);
     }
 
     /**
