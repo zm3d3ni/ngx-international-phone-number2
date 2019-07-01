@@ -33,6 +33,10 @@ I discovered some problems with the ngx-international-phone-number library, prom
 
 8 - Added optional input to not prepend US phone numbers with country code (**noUSCountryCode** defaults to true)
 
+9 - Added optional input to touch model upon every keystroke (previous behavior), otherwise only touch model when input is blurred or when phone becomes valid. This can help with parent error display to not show error as soon as typing is started on new number (**autoTouch** defaults to false)
+
+10 - Make default country first in drop down list.
+
 ## Installation
 
 To install this library, run:
