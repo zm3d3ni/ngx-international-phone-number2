@@ -51,7 +51,7 @@ export class PhoneNumberComponent
     @Input() maxlength = 15; // default
 
     @Input() defaultCountry: string;
-    @Input() required: boolean;
+    @Input() required: boolean = false;
     @Input() allowDropdown = true;
     @Input() type = 'text';
 
@@ -71,6 +71,9 @@ export class PhoneNumberComponent
     // optionally suppress the +1 for US phones
     @Input() noUSCountryCode: boolean = true;
 
+    // Set true if you want the model touched upon any change, rather than just when valid or blurred.
+    @Input() autoTouch: boolean = false;
+    
     @Output() onCountryCodeChanged: EventEmitter<any> = new EventEmitter();
 
     // ELEMENT REF
@@ -86,6 +89,8 @@ export class PhoneNumberComponent
     showDropdown = false;
     phoneNumber = '';
     phoneNumberOnly = ''; //separating the phone from the country dial code
+    hasAreaCodeParenthesis = false; // try to format output as before
+    hasDashes = false; // try to format output as before
 
     value = '';
 
@@ -229,6 +234,14 @@ export class PhoneNumberComponent
     }
 
     /**
+     * Touch the model for validation when input is blurred. This allows for validation errors only after
+     * user has entered a value and left the element, rather than as soon as typing begins
+     */
+    blur(){
+        this.onTouch();
+    }
+
+    /**
      *
      * @param value
      */
@@ -268,20 +281,29 @@ export class PhoneNumberComponent
             }
         };
 
-        if (this.required && !value) {
-            // if (value && selectedDialCode)
-            //     value = value.replace(/\s/g, '').replace(selectedDialCode, '');
-
-            // if (!value) return validationError;
-            return validationError;
+        // strip out stuff like (,),-
+        let digits;
+        if(value)
+            digits = value.replace(/\D/g, "");
+        if (!digits) {
+            if(this.required){
+                return validationError;
+            }
+            return null;
         }
 
         if (value) {
             // validating number using the google's lib phone
             const phoneUtil = glibphone.PhoneNumberUtil.getInstance();
             try {
+                // add country code to US to test validation, not for model update or display
+                if(this.selectedCountry.countryCode=='us' && this.noUSCountryCode)
+                    value = '+1 '+this.phoneNumberOnly;
                 let phoneNumber = phoneUtil.parse(value);
                 let isValidNumber = phoneUtil.isValidNumber(phoneNumber);
+                // touch model if valid, to avoid setting untouched before finishing entering value and potentially impacting parent's error display
+                if(isValidNumber)
+                    this.onTouch();
                 return isValidNumber ? null : validationError;
             } catch (ex) {
                 return validationError;
@@ -296,18 +318,28 @@ export class PhoneNumberComponent
      */
     private updateValue() {
         let temp;
+        let dialCode;
+
+        if(this.selectedCountry.countryCode == 'us' && this.noUSCountryCode)
+            dialCode = '';
+        else
+            dialCode = '+'+this.dialCode;    
+        if(this.countryCodeSpace)
+            temp = dialCode+' '+this.formattedPhone();
+        else
+            temp = dialCode+this.formattedPhone();
         
-        if(this.selectedCountry.countryCode != 'us' || this.noUSCountryCode)
-            if(this.countryCodeSpace)
-                temp = '+'+this.dialCode+' '+this.phoneNumberOnly;
-            else
-                temp = '+'+this.dialCode+this.phoneNumberOnly;
-        else {   
-            temp = this.phoneNumberOnly;    
-        }
-        temp = temp.replace(/-/g, '');
         this.onModelChange(temp);
-        this.onTouch();
+        if(this.autoTouch)
+            this.onTouch();
+    }
+
+    formattedPhone(){
+        let formatted;
+        let temp = this.phoneNumberOnly.replace(/\D/g, "");
+        formatted = '('+ temp.substring(0, 3)+ ') ' + temp.substring(3, 6) + '-' + temp.substring(6, temp.length);
+        console.log('formattedPhone: ',formatted);   
+        return formatted; 
     }
 
     /**

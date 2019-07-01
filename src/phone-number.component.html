@@ -22,9 +22,11 @@
   <label id='dial-code' *ngIf=dialCode>+{{dialCode}}</label>
 
   <input *ngIf="required" phone required name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}' pattern="{{pattern}}" 
-  [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) />
+  [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) 
+  (blur)=blur()/>
 
   <!-- if not required -->
   <input *ngIf="!required" phone name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}' pattern="{{pattern}}" 
-  [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) />
+  [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) 
+  (blur)=blur()/>
 </div>
