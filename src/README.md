@@ -80,6 +80,13 @@ Once it is imported, you can use `international-phone-number2`:
 <!-- app.component.html -->
 <form name="sample-form" (ngSubmit)="submit()" #f="ngForm">
  <international-phone-number2 [(ngModel)]="model.phone_number" placeholder="Enter phone number" [defaultCountry]="'in'" [required]="true" #phoneNumber="ngModel" name="phone_number" [allowedCountries]="['in', 'ca', 'us']" ></international-phone-number2>
+ 
+ <!-- sample error message -->
+<div *ngIf="!phoneNumber.valid && !phoneNumber.pristine && !phoneNumber.untouched" class="has-error row">
+    <span aria-hidden="true"><i class='fa fa-times-circle color-error'></i></span>
+    <div *ngIf="phoneNumber.errors.required">Phone is required</div>
+    <div *ngIf="phoneNumber.errors.pattern">Be sure to include the area code and 7-digit number</div>
+</div>
 
   <div *ngIf="f.submitted && !phoneNumber.valid" class="help-block">Phone number is required and should be valid</div>
   <button type="submit">Submit</button>

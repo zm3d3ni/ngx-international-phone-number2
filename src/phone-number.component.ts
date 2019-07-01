@@ -292,10 +292,12 @@ export class PhoneNumberComponent
     validate(c: FormControl): ValidationErrors | null {
         let value = c.value;
         // let selectedDialCode = this.getSelectedCountryDialCode();
-        let validationError: ValidationErrors = {
+        var validationError = {
             phoneEmptyError: {
-                valid: false
-            }
+                valid: false // maintaining this to be backward compatible with prior versions
+            },
+            required: false, // this is a more standard error flag
+            pattern: false
         };
 
         // strip out stuff like (,),-
@@ -304,6 +306,8 @@ export class PhoneNumberComponent
             digits = value.replace(/\D/g, "");
         if (!digits) {
             if(this.required){
+                validationError.phoneEmptyError.valid = true;
+                validationError.required = true;
                 return validationError;
             }
             return null;
@@ -321,8 +325,11 @@ export class PhoneNumberComponent
                 // touch model if valid, to avoid setting untouched before finishing entering value and potentially impacting parent's error display
                 if(isValidNumber)
                     this.onTouch();
+                else
+                    validationError.pattern = true;
                 return isValidNumber ? null : validationError;
             } catch (ex) {
+                validationError.pattern = true;
                 return validationError;
             }
         }
@@ -355,7 +362,6 @@ export class PhoneNumberComponent
         let formatted;
         let temp = this.phoneNumberOnly.replace(/\D/g, "");
         formatted = '('+ temp.substring(0, 3)+ ') ' + temp.substring(3, 6) + '-' + temp.substring(6, temp.length);
-        console.log('formattedPhone: ',formatted);   
         return formatted; 
     }
 
