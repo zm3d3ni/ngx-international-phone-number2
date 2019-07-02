@@ -56,7 +56,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 // Import your library
-import { InternationalPhoneNumberModule } from 'ngx-international-phone-number2';
+import { InternationalPhoneNumber2Module } from 'ngx-international-phone-number2';
 
 @NgModule({
   declarations: [
@@ -65,8 +65,8 @@ import { InternationalPhoneNumberModule } from 'ngx-international-phone-number2'
   imports: [
     BrowserModule,
 
-    // InternationalPhoneNumberModule module
-    InternationalPhoneNumberModule
+    // InternationalPhoneNumber2Module module
+    InternationalPhoneNumber2Module
   ],
   providers: [],
   bootstrap: [AppComponent]
