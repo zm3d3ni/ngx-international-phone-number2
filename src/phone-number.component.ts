@@ -60,7 +60,8 @@ export class PhoneNumberComponent
     // customizable text masking, defaults as "111-111-1111"
     // TODO - I am unable to pass this Input in as an array
     // @Input() masking = [/[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-    masking = [/[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+    // change first digit to allow 0 as some countries have phones a 123-456-789 which we can enter as 012-345-6789
+    masking = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
     // regex pattern to apply to input, defaults as 3 digits followed by 3 digits, followed by 4 digits
     @Input() pattern = "^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$";

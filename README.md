@@ -110,6 +110,8 @@ Once it is imported, you can use `international-phone-number2`:
 
     noUSCountryCode: Boolean to suppress +1 country code for US numbers in model (defaults to true)
 
+    autoTouch: Boolean to touch model upon each keystroke, otherwise touch model upon input blur or valid phone (defaults to false)
+
 ## Troubleshooting:
 If you are getting error "Can't resolve 'google-libphonenumber'" while building with aot, try to install google-libphonenumber. Run npm install google-libphonenumber@3.0.9 --save
 
