@@ -25,7 +25,7 @@ I discovered some problems with the ngx-international-phone-number library, prom
 
 5 - There was no support for masking, for instance "111-111-1111".
 
-  - This has been fixed by adding masking in above format
+  - This has been fixed by adding masking in above format (Note: for US and Canada numbers only)
 
 6 - If defaultCountry was set true, existing phone values would have the country changed to that default country. The default country should apply only to new empty inputs.
 
@@ -36,6 +36,8 @@ I discovered some problems with the ngx-international-phone-number library, prom
 9 - Added optional input to touch model upon every keystroke (previous behavior), otherwise only touch model when input is blurred or when phone becomes valid. This can help with parent error display to not show error as soon as typing is started on new number (**autoTouch** defaults to false)
 
 10 - Make default country first in drop down list.
+
+11 - As of v1.2.0, only US and Canada masked as 111-111-1111. Foreign numbers only enforce the numeric maxlength. As some counties have varying lengths and patterns (for instance Finland can have 5-12 digits). Now rely only on the underlying google-libphonenumber for validation. No visible masking done for foreign numbers.
 
 ## Installation
 
@@ -111,6 +113,8 @@ Once it is imported, you can use `international-phone-number2`:
     noUSCountryCode: Boolean to suppress +1 country code for US numbers in model (defaults to true)
 
     autoTouch: Boolean to touch model upon each keystroke, otherwise touch model upon input blur or valid phone (defaults to false)
+
+    maxlength: Maxlength enforced on foreign numbers (US or Canada enforce pattern 111-111-1111, defaults to 12).
 
 ## Troubleshooting:
 If you are getting error "Can't resolve 'google-libphonenumber'" while building with aot, try to install google-libphonenumber. Run npm install google-libphonenumber@3.0.9 --save

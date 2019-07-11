@@ -48,7 +48,7 @@ export class PhoneNumberComponent
     implements OnInit, ControlValueAccessor, Validator {
     // input
     @Input() placeholder = 'Enter phone number'; // default
-    @Input() maxlength = 15; // default
+    @Input() maxlength = 12; // default
 
     @Input() defaultCountry: string;
     @Input() required: boolean = false;
@@ -57,15 +57,9 @@ export class PhoneNumberComponent
 
     @Input() allowedCountries: Country[];
 
-    // customizable text masking, defaults as "111-111-1111"
-    // TODO - I am unable to pass this Input in as an array
-    // @Input() masking = [/[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-    // change first digit to allow 0 as some countries have phones a 123-456-789 which we can enter as 012-345-6789
+    // only doing masking for US and Canadian numbers. Other countries can have different patterns, Finland even allows numbers from 5 to 12 digits. Rely on Google-libphonenumber
     masking = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
-    // regex pattern to apply to input, defaults as 3 digits followed by 3 digits, followed by 4 digits
-    @Input() pattern = "^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$";
-    
     // optionally format output model with a space between country code and phone number
     @Input() countryCodeSpace: boolean = true;
     
@@ -135,6 +129,13 @@ export class PhoneNumberComponent
         this.orderCountriesByName();
         if(this.defaultCountry)
             this.setDefault();
+    }
+
+    /**
+     * Return true if not US or Canada. Eliminates masking and relies solely on Google-libphonenumber for validation
+     */
+    isForeign(){
+        return this.selectedCountry.countryCode!='us' && this.selectedCountry.countryCode!='ca';
     }
 
     /**
@@ -282,8 +283,17 @@ export class PhoneNumberComponent
 
     // strips country dial code from phone for display
     getPhoneOnly(){
-        this.phoneNumberOnly = this.phoneNumber.replace(/\D/g, "");
-        this.phoneNumberOnly = this.phoneNumberOnly.substring(this.phoneNumberOnly.length-10, this.phoneNumberOnly.length);
+        // if country code, read the number after the country code and space
+        if (PhoneNumberComponent.startsWithPlus(this.phoneNumber)){
+            let space = this.phoneNumber.indexOf(' ');
+            this.phoneNumberOnly = this.phoneNumber.substring(space, this.phoneNumber.length);
+            this.phoneNumberOnly = this.phoneNumberOnly.replace(/\D/g, "");
+        }
+        // otherwise read the 10 digit domestic phone
+        else {
+            this.phoneNumberOnly = this.phoneNumber.replace(/\D/g, "");
+            this.phoneNumberOnly = this.phoneNumberOnly.substring(this.phoneNumberOnly.length - 10, this.phoneNumberOnly.length);
+        }
     }
 
     /**
@@ -361,8 +371,11 @@ export class PhoneNumberComponent
 
     formattedPhone(){
         let formatted;
-        let temp = this.phoneNumberOnly.replace(/\D/g, "");
-        formatted = '('+ temp.substring(0, 3)+ ') ' + temp.substring(3, 6) + '-' + temp.substring(6, temp.length);
+        let temp = this.phoneNumberOnly.replace(/\D/g, "");        
+        if(!this.selectedCountry || !this.isForeign())
+            formatted = '(' + temp.substring(0, 3) + ') ' + temp.substring(3, 6) + '-' + temp.substring(6, temp.length);
+        else
+            formatted = temp;  
         return formatted; 
     }
 

@@ -18,15 +18,23 @@
           </div>
   </span>
 
-  <!-- if required -->
   <label id='dial-code' *ngIf=dialCode>+{{dialCode}}</label>
 
-  <input *ngIf="required" phone required name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}' pattern="{{pattern}}" 
+  <!-- domestic, required, uses masking directive -->
+  <input *ngIf="required && !isForeign()" phone required name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}'
+   [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) 
+   (blur)=blur()/>
+   <!-- Foreign, required, since foreign countries can have different length phones, potentially from 5 to 12 digits, remove the masking and enforce a max of 12 numeric digits. Rely on google-libphonenumber for validation. -->
+  <input *ngIf="required && isForeign()" phone required name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}' 
+   maxlength='{{maxlength}}' onkeypress='return event.charCode >= 48 && event.charCode <= 57' [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) 
+   (blur)=blur()/>
+
+  <!-- domestic, not required -->
+  <input *ngIf="!required && !isForeign()" phone name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}'  
   [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) 
   (blur)=blur()/>
-
-  <!-- if not required -->
-  <input *ngIf="!required" phone name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}' pattern="{{pattern}}" 
-  [textMask]="{mask: masking}" [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) 
+  <!-- foreign, not required -->
+  <input *ngIf="!required && isForeign()" phone name="primaryPhoneInput" id="primaryPhoneInput" placeholder='{{placeholder}}' 
+  maxlength='{{maxlength}}' onkeypress='return event.charCode >= 48 && event.charCode <= 57' [(ngModel)]="phoneNumberOnly" aria-label='phone number' #phoneNumberInput type="text" (ngModelChange)=updatePhoneNumber($event) 
   (blur)=blur()/>
 </div>
