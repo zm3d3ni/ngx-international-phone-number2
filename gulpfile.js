@@ -57,6 +57,14 @@ gulp.task('ngc', function () {
 });
 
 /**
+ * Copy the images into build folder
+ */
+gulp.task('images', function() {
+  return gulp.src('src/assets/images/**/*')
+    .pipe(gulp.dest('build/assets/images'));
+});
+
+/**
  * 5. Run rollup inside the /build folder to generate our Flat ES module and place the
  *    generated file into the /dist folder
  */
@@ -184,6 +192,7 @@ gulp.task('compile', function () {
     'copy:source',
     'inline-resources',
     'ngc',
+    'images',
     'rollup:fesm',
     'rollup:umd',
     'copy:build',

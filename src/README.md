@@ -74,6 +74,18 @@ import { InternationalPhoneNumber2Module } from 'ngx-international-phone-number2
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
+```
+
+As of v1.2.1 - flags sprite image was converted to a local image to remove dependency on CDN.
+In your angular.json in the assets array, include the library's assets/images folder:
+```typescript
+{
+  "glob": "**/*",
+  "input": "node_modules/ngx-international-phone-number2/assets/images",
+  "output": "./assets/images"
+}
 ```
 
 Once it is imported, you can use `international-phone-number2`:
@@ -100,7 +112,7 @@ Once it is imported, you can use `international-phone-number2`:
        
     placeholder: A placeholder text which would be displayed in input widget
     
-    required: Indicates whether it's required or not
+    required: Indicates whether it is required or not
     
     allowDropdown: Indicates whether to allow selecting country from dropdown
 
