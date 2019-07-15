@@ -135,7 +135,7 @@ export class PhoneNumberComponent
      * Return true if not US or Canada. Eliminates masking and relies solely on Google-libphonenumber for validation
      */
     isForeign(){
-        return this.selectedCountry.countryCode!='us' && this.selectedCountry.countryCode!='ca';
+        return this.selectedCountry && this.selectedCountry.countryCode!='us' && this.selectedCountry.countryCode!='ca';
     }
 
     /**
