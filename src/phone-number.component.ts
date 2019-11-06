@@ -129,6 +129,8 @@ export class PhoneNumberComponent
         this.orderCountriesByName();
         if(this.defaultCountry)
             this.setDefault();
+        if(!this.selectedCountry)
+            this.findPrefix(this.defaultCountry);
     }
 
     /**
@@ -224,7 +226,11 @@ export class PhoneNumberComponent
         } else {
             this.selectedCountry = null;
         }
-        this.dialCode = this.selectedCountry.dialCode;
+        var defaultCountryUS = {name: "United States", dialCode: "1", countryCode: "us"};
+        if(this.selectedCountry)
+            this.dialCode = this.selectedCountry.dialCode;
+        else
+            this.selectedCountry = defaultCountryUS;
     }
 
     /**
