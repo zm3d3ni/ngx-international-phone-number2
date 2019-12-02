@@ -313,7 +313,7 @@ export class PhoneNumberComponent
             phoneEmptyError: {
                 valid: false // maintaining this to be backward compatible with prior versions
             },
-            required: false, // this is a more standard error flag
+            required: this.formattedPhone().replace(/\D/g, "").length < 1, // this is a more standard error flag
             pattern: false
         };
 
@@ -321,7 +321,7 @@ export class PhoneNumberComponent
         let digits;
         if(value)
             digits = value.replace(/\D/g, "");
-        if (!digits) {
+        if (this.formattedPhone().replace(/\D/g, "").length < 1) {
             if(this.required){
                 validationError.phoneEmptyError.valid = true;
                 validationError.required = true;
