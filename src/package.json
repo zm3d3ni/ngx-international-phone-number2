@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/esoyke/ngx-international-phone-number2/issues"
   },
-  "main": "ngx-international-phone-number2.umd.js",
+  "main": "ngx-international-phone-number.umd.js",
   "module": "index.js",
   "jsnext:main": "index.js",
   "typings": "ngx-international-phone-number2.d.ts",
